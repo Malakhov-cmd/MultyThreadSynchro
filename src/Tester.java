@@ -34,12 +34,14 @@ public class Tester {
 
             Thread firstPow = new Thread(new Pow(a, critical, out));
             Thread secondPow = new Thread(new Pow(b, critical, out));
+            Thread add = new Thread(new Add(critical, out));
+            Thread sqrt = new Thread(new Sqrt(critical, out));
 
             firstPow.start();
             secondPow.start();
+            add.start();
+            sqrt.start();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

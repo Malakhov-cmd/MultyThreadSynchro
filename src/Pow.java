@@ -34,6 +34,7 @@ public class Pow implements Runnable {
             try {
                 out.position(out.position() - 8);
                 System.out.println("Powed value: " + out.getDouble() + " ");
+                System.out.println();
             } catch (IllegalArgumentException e) {
                 System.out.println("Negative index");
             }
