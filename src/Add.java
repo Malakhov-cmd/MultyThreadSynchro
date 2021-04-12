@@ -12,15 +12,14 @@ public class Add implements Runnable {
 
     public static void setCounter(int counter)
     {
-        counter = counter;
+        counterAdd = counter;
     }
 
     @Override
     public void run() {
         while (true) {
             synchronized (critical) {
-                //counter = SynchroCouter.count;
-                while (out.position() != 16+counter) {
+                while (out.position() != 16+counterAdd) {
                     try {
                         System.out.println("(Add) Current position:  " + out.position());
                         critical.wait();
@@ -28,12 +27,12 @@ public class Add implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 16+counter) {
+                if (out.position() == 16+counterAdd) {
 
                         double sqrA;
                         double sqrB;
 
-                        out.position(out.position() - 16+counter);
+                        out.position(out.position() - 16);
                         System.out.println("(Add) Current position:  " + out.position());
                         sqrA = out.getDouble();
 

@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
@@ -30,8 +29,8 @@ public class Tester {
 
             out = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
 
-            Thread firstPow = new Thread(new Pow(a, critical, out));
-            Thread secondPow = new Thread(new Pow(b, critical, out));
+            Thread firstPow = new Thread(new PowA(a, critical, out));
+            Thread secondPow = new Thread(new PowA(b, critical, out));
             Thread add = new Thread(new Add(critical, out));
             Thread sqrt = new Thread(new Sqrt(critical, out));
 
