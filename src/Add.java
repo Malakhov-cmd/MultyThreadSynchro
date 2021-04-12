@@ -1,3 +1,4 @@
+import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 
 public class Add implements Runnable {
@@ -10,8 +11,7 @@ public class Add implements Runnable {
         this.out = out;
     }
 
-    public static void setCounter(int counter)
-    {
+    public static void setCounter(int counter) {
         counterAdd = counter;
     }
 
@@ -19,7 +19,7 @@ public class Add implements Runnable {
     public void run() {
         while (true) {
             synchronized (critical) {
-                while (out.position() != 16+counterAdd) {
+                while (out.position() != 16 + counterAdd) {
                     try {
                         System.out.println("(Add) Current position:  " + out.position());
                         critical.wait();
@@ -27,7 +27,8 @@ public class Add implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 16+counterAdd) {
+                try {
+                    if (out.position() == 16 + counterAdd) {
 
                         double sqrA;
                         double sqrB;
@@ -46,11 +47,14 @@ public class Add implements Runnable {
                         System.out.println("(Add) Current position:  " + out.position());
                         System.out.println();
 
-                    critical.notifyAll();
+                        critical.notifyAll();
+                    }
+                } catch (BufferOverflowException e) {
+                    System.out.println("Overflow file");
                 }
+                System.out.println("End add");
+                System.out.println();
             }
-            System.out.println("End add");
-            System.out.println();
         }
     }
 }

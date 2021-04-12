@@ -1,11 +1,11 @@
-import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 
 public class PowA implements Runnable {
     private Double a;
     private Object critical;
     private MappedByteBuffer out;
-    public static int counterPow;
+    private static int counterPowA;
 
     public PowA(Double a, Object critical, MappedByteBuffer out) {
         this.a = a;
@@ -13,36 +13,40 @@ public class PowA implements Runnable {
         this.out = out;
     }
 
-    public static void setCounterPowA(int count){
-        counterPow = count;
+    public static void setCounterPowA(int count) {
+        counterPowA = count;
     }
 
     @Override
     public void run() {
         while (true) {
             synchronized (critical) {
-                while (out.position() != 0 + counterPow) {
+                while (out.position() != 0 + counterPowA) {
                     try {
-                        System.out.println("Counter: " + counterPow);
+                        System.out.println("Counter: " + counterPowA);
                         System.out.println("(Pow) Current position:  " + out.position());
                         critical.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 0 + counterPow ) {
-                    System.out.println("pow " + counterPow);
+                try {
+                    if (out.position() == 0 + counterPowA) {
+                        System.out.println("pow " + counterPowA);
 
-                    Double result = Math.pow(a, 2);
-                    System.out.println("(Pow) Value is: " + result);
-                    out.putDouble(result.doubleValue());
-                    System.out.println("(Pow) Current position:  " + out.position());
+                        double result = Math.pow(a, 2);
+                        System.out.println("(Pow) Value is: " + result);
+                        out.putDouble(result);
+                        System.out.println("(Pow) Current position:  " + out.position());
 
-                    out.position(out.position() - 8);
-                    System.out.println("(Pow) Powed value: " + out.getDouble() + " ");
-                    System.out.println("Itigo  " + out.position());
-                    System.out.println();
-                    critical.notifyAll();
+                        out.position(out.position() - 8);
+                        System.out.println("(Pow) Powed value: " + out.getDouble() + " ");
+                        System.out.println("Itigo  " + out.position());
+                        System.out.println();
+                        critical.notifyAll();
+                    }
+                } catch (BufferOverflowException e) {
+                    System.out.println("Overflow file");
                 }
             }
             System.out.println("End pow");

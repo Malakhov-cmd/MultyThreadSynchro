@@ -1,9 +1,10 @@
+import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 
 public class Sqrt implements Runnable {
     private Object critical;
     private MappedByteBuffer out;
-    public volatile int counter;
+    private volatile int counter;
 
     public Sqrt(Object critical, MappedByteBuffer out) {
         this.critical = critical;
@@ -22,27 +23,31 @@ public class Sqrt implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 24 + counter) {
-                    out.position(out.position() - 8);
-                    System.out.println("(Sqrt) Current position:  " + out.position());
-                    double sumSQR = out.getDouble();
+                try {
+                    if (out.position() == 24 + counter) {
+                        out.position(out.position() - 8);
+                        System.out.println("(Sqrt) Current position:  " + out.position());
+                        double sumSQR = out.getDouble();
 
-                    double sqrtSum = Math.sqrt(sumSQR);
+                        double sqrtSum = Math.sqrt(sumSQR);
 
-                    out.putDouble(sqrtSum);
-                    counter = counter + 32;
+                        out.putDouble(sqrtSum);
+                        counter = counter + 32;
 
-                    Add.setCounter(counter);
-                    PowA.setCounterPowA(counter);
-                    PowB.setCounterPowB(counter);
+                        Add.setCounter(counter);
+                        PowA.setCounterPowA(counter);
+                        PowB.setCounterPowB(counter);
 
 
-                    System.out.println("(Sqrt) Current position:  " + out.position());
+                        System.out.println("(Sqrt) Current position:  " + out.position());
 
-                    System.out.println("Answer: " + sqrtSum);
-                    System.out.println();
+                        System.out.println("Answer: " + sqrtSum);
+                        System.out.println();
 
-                    critical.notifyAll();
+                        critical.notifyAll();
+                    }
+                } catch (BufferOverflowException e) {
+                    System.out.println("Overflow file");
                 }
                 System.out.println("End sqrt");
                 System.out.println();

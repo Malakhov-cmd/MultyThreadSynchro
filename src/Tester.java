@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Tester {
     public Object critical = new Object();
-    private int fileSize = 10240;
+    private int fileSize = 1000000;
     private MappedByteBuffer out;
 
     public void action() {
