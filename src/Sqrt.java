@@ -1,2 +1,6 @@
-public class Sqrt {
+public class Sqrt implements Runnable{
+    @Override
+    public void run() {
+
+    }
 }
