@@ -30,7 +30,7 @@ public class Tester {
             out = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
 
             Thread firstPow = new Thread(new PowA(a, critical, out));
-            Thread secondPow = new Thread(new PowA(b, critical, out));
+            Thread secondPow = new Thread(new PowB(b, critical, out));
             Thread add = new Thread(new Add(critical, out));
             Thread sqrt = new Thread(new Sqrt(critical, out));
 

@@ -12,7 +12,7 @@ public class PowB implements Runnable {
         this.out = out;
     }
 
-    public static void setCounterPow(int count){
+    public static void setCounterPowB(int count){
         counterPow = count;
     }
 
@@ -20,8 +20,7 @@ public class PowB implements Runnable {
     public void run() {
         while (true) {
             synchronized (critical) {
-                //counter = SynchroCouter.count;
-                while (out.position() != 0 + counterPow && out.position() != 8 + counterPow) {
+                while ( out.position() != 8 + counterPow) {
                     try {
                         System.out.println("Counter: " + counterPow);
                         System.out.println("(Pow) Current position:  " + out.position());
@@ -30,7 +29,7 @@ public class PowB implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 0 + counterPow || out.position() == 8 + counterPow) {
+                if ( out.position() == 8 + counterPow) {
                     System.out.println("pow " + counterPow);
 
                     Double result = Math.pow(a, 2);
