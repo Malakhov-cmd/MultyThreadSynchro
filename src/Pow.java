@@ -5,44 +5,45 @@ public class Pow implements Runnable {
     private Double a;
     private Object critical;
     private MappedByteBuffer out;
-    private volatile int counter;
+    public int counter;
 
-    public Pow(Double a, Object critical, MappedByteBuffer out, int counter) {
+    public Pow(Double a, Object critical, MappedByteBuffer out) {
         this.a = a;
         this.critical = critical;
         this.out = out;
-        this.counter = counter;
     }
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             synchronized (critical) {
-                while (out.position() != 0*counter && out.position() != 8*counter) {
+                counter = SynchroCouter.count;
+                while (out.position() != 0 + counter && out.position() != 8 + counter) {
                     try {
+                        System.out.println("Counter: " + counter);
                         System.out.println("(Pow) Current position:  " + out.position());
                         critical.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                if(out.position() == 0 || out.position() == 8) {
+                if (out.position() == 0 + counter || out.position() == 8 + counter) {
+                    System.out.println("pow " + counter);
+
                     Double result = Math.pow(a, 2);
                     System.out.println("(Pow) Value is: " + result);
                     out.putDouble(result.doubleValue());
                     System.out.println("(Pow) Current position:  " + out.position());
 
-                    try {
-                        out.position(out.position() - 8);
-                        System.out.println("(Pow) Powed value: " + out.getDouble() + " ");
-                        System.out.println();
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Negative index");
-                    } finally {
-                        critical.notifyAll();
-                    }
+                    out.position(out.position() - 8 + counter);
+                    System.out.println("(Pow) Powed value: " + out.getDouble() + " ");
+                    System.out.println("Itigo  " + out.position());
+                    System.out.println();
+                    critical.notifyAll();
                 }
             }
+            System.out.println("End pow");
+            System.out.println();
         }
     }
 }

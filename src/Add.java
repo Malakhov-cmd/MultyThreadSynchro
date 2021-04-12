@@ -3,19 +3,24 @@ import java.nio.MappedByteBuffer;
 public class Add implements Runnable {
     private Object critical;
     private MappedByteBuffer out;
-    private volatile int counter;
+    private static int counterAdd;
 
-    public Add(Object critical, MappedByteBuffer out, int counter) {
+    public Add(Object critical, MappedByteBuffer out) {
         this.critical = critical;
         this.out = out;
-        this.counter = counter;
+    }
+
+    public static void setCounter(int counter)
+    {
+        counter = counter;
     }
 
     @Override
     public void run() {
         while (true) {
             synchronized (critical) {
-                while (out.position() != 16) {
+                //counter = SynchroCouter.count;
+                while (out.position() != 16+counter) {
                     try {
                         System.out.println("(Add) Current position:  " + out.position());
                         critical.wait();
@@ -23,12 +28,12 @@ public class Add implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                if (out.position() == 16) {
-                    try {
+                if (out.position() == 16+counter) {
+
                         double sqrA;
                         double sqrB;
 
-                        out.position(out.position() - 16);
+                        out.position(out.position() - 16+counter);
                         System.out.println("(Add) Current position:  " + out.position());
                         sqrA = out.getDouble();
 
@@ -41,12 +46,12 @@ public class Add implements Runnable {
                         out.putDouble(sumSQR);
                         System.out.println("(Add) Current position:  " + out.position());
                         System.out.println();
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Negative index");
-                    }
+
                     critical.notifyAll();
                 }
             }
+            System.out.println("End add");
+            System.out.println();
         }
     }
 }

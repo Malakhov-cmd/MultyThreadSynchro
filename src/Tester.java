@@ -10,7 +10,6 @@ public class Tester {
     public Object critical = new Object();
     private int fileSize = 10240;
     private MappedByteBuffer out;
-    private volatile int counter = 0;
 
     public void action() {
         Scanner in = new Scanner(System.in);
@@ -31,10 +30,10 @@ public class Tester {
 
             out = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
 
-            Thread firstPow = new Thread(new Pow(a, critical, out, counter));
-            Thread secondPow = new Thread(new Pow(b, critical, out, counter));
-            Thread add = new Thread(new Add(critical, out, counter));
-            Thread sqrt = new Thread(new Sqrt(critical, out, counter));
+            Thread firstPow = new Thread(new Pow(a, critical, out));
+            Thread secondPow = new Thread(new Pow(b, critical, out));
+            Thread add = new Thread(new Add(critical, out));
+            Thread sqrt = new Thread(new Sqrt(critical, out));
 
             firstPow.start();
             secondPow.start();
