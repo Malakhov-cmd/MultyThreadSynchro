@@ -42,6 +42,7 @@ public class Add implements Runnable {
             } catch (IllegalArgumentException e) {
                 System.out.println("Negative index");
             }
+            critical.notifyAll();
         }
     }
 }

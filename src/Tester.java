@@ -11,7 +11,7 @@ public class Tester {
     private int fileSize = 10240;
     private MappedByteBuffer out;
 
-    public void action(){
+    public void action() {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter first parameter");
         Double a = in.nextDouble();
@@ -21,8 +21,7 @@ public class Tester {
 
         File file = new File("largeFile.txt");
 
-        if(file.exists())
-        {
+        if (file.exists()) {
             file.delete();
             System.out.println("delete");
         }

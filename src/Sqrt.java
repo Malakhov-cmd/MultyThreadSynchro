@@ -30,6 +30,9 @@ public class Sqrt implements Runnable{
             System.out.println("(Sqrt) Current position:  " + out.position());
             System.out.println("Answer: " + sqrtSum);
             System.out.println();
+
+            out.position(out.position() - 32);
+            critical.notifyAll();
         }
     }
 }
