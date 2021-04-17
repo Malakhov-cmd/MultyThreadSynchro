@@ -41,7 +41,6 @@ public class PowB implements Runnable {
 
                         out.position(out.position() - 8);
                         System.out.println("(Pow) Powed value: " + out.getDouble() + " ");
-                        System.out.println("Itigo  " + out.position());
                         System.out.println();
                         critical.notifyAll();
                     }
